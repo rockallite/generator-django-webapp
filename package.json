@@ -1,10 +1,10 @@
 {
-  "name": "generator-webapp",
+  "name": "generator-django-webapp",
   "version": "0.4.8",
-  "description": "Scaffold out a front-end web app",
+  "description": "Scaffold out a Django web app with front-end support",
   "license": "BSD",
-  "repository": "yeoman/generator-webapp",
-  "author": "The Yeoman Team",
+  "repository": "rockallite/generator-django-webapp",
+  "author": "Rockallite Wulf",
   "main": "app/index.js",
   "engines": {
     "node": ">=0.10.0",
@@ -18,12 +18,14 @@
   ],
   "keywords": [
     "yeoman-generator",
+    "django",
     "web",
     "app",
     "front-end",
     "h5bp",
     "modernizr",
     "jquery",
+    "requirejs",
     "grunt"
   ],
   "dependencies": {

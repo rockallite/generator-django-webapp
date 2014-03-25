@@ -1,8 +1,6 @@
-# Web app generator [![Build Status](https://secure.travis-ci.org/yeoman/generator-webapp.png?branch=master)](http://travis-ci.org/yeoman/generator-webapp) [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
+# Django web app generator [![Build Status](https://secure.travis-ci.org/rockallite/generator-django-webapp.png?branch=master)](http://travis-ci.org/rockallite/generator-django-webapp) [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
 
-[Yeoman](http://yeoman.io) generator that scaffolds out a front-end web app.
-
-![](http://i.imgur.com/uKTT2Hj.png)
+[Yeoman](http://yeoman.io) generator that scaffolds out a Django web app with front-end support. Derived from [generator-webapp](https://github.com/yeoman/generator-webapp/).
 
 ## Features
 
@@ -15,14 +13,16 @@
 * Mocha Unit Testing with PhantomJS
 * Optional - Bootstrap for Sass
 * Optional - Leaner Modernizr builds *(new)*
+* Auto-generated config paths of all RequireJS modules
+* Automagically transfer Django template static URL prefix (`{{ STATIC_URL }}`) to processed HTML templates
 
 For more information on what `generator-webapp` can do for you, take a look at the [Grunt tasks](https://github.com/yeoman/generator-webapp/blob/master/app/templates/_package.json) used in our `package.json`.
 
 
 ## Getting Started
 
-- Install: `npm install -g generator-webapp`
-- Run: `yo webapp`
+- Install: `npm install -g generator-django-webapp`
+- Run: `yo django-webapp`
 - Run `grunt` for building and `grunt serve` for preview [*](#serve-note)
 
 
@@ -68,11 +68,9 @@ Note: `grunt server` was previously used for previewing in earlier versions of t
 
 ## Contribute
 
-See the [contributing docs](https://github.com/yeoman/yeoman/blob/master/contributing.md)
+Main development happens in Yeoman's `generator-webapp`. See the [contributing docs](https://github.com/yeoman/yeoman/blob/master/contributing.md)
 
-Note: We are regularly asked whether we can add or take away features. If a change is good enough to have a positive impact on all users, we are happy to consider it.
-
-If not, `generator-webapp` is fork-friendly and you can always maintain a custom version which you `npm install && npm link` to continue using via `yo webapp` or a name of your choosing.
+`generator-django-webapp` is fork-friendly (and is also a fork of `generator-webapp`) and you can always maintain a custom version which you `npm install && npm link` to continue using via `yo django-webapp` or a name of your choosing.
 
 
 ## License
