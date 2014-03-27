@@ -3,14 +3,14 @@
 var path    = require('path');
 var helpers = require('yeoman-generator').test;
 
-describe('Webapp generator test', function () {
+describe('Django webapp generator test', function () {
   beforeEach(function (done) {
     helpers.testDirectory(path.join(__dirname, 'temp'), function (err) {
       if (err) {
         return done(err);
       }
 
-      this.webapp = helpers.createGenerator('webapp:app', [
+      this.webapp = helpers.createGenerator('django-webapp:app', [
         '../../app', [
           helpers.createDummyGenerator(),
           'mocha:app'

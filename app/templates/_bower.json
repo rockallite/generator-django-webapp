@@ -2,9 +2,11 @@
   "name": "<%= _.slugify(appname) %>",
   "private": true,
   "dependencies": {<% if (includeBootstrap) { if (includeCompass) { %>
-    "bootstrap-sass-official": "~3.1.0",<% } else { %>
-    "bootstrap": "~3.0.3",<% }} if (includeModernizr) { %>
-    "modernizr": "~2.6.2",<% } %>
+    "bootstrap-sass-official": "~3.1.1",<% } else { %>
+    "bootstrap": "~3.1.1",<% }} %>
+    "console-polyfill": "~0.1.1",<% if (includeModernizr) { %>
+    "modernizr": "~2.6.2",<% } %><% if (includeRequireJS) {%>
+	  "requirejs": "~2.1.11",<% } %>
     "jquery": "~1.11.0"
   },
   "devDependencies": {}
