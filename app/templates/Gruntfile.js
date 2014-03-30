@@ -282,7 +282,7 @@ module.exports = function (grunt) {
             },
             dist: {
                 options: {
-                    generatedImagesDir: '<%%= config.dist %>/images/generated'
+                    generatedImagesDir: '<%%= config.distAssets %>/images/generated'
                 }
             },
             server: {
@@ -383,7 +383,7 @@ module.exports = function (grunt) {
                     expand: true,
                     cwd: '<%%= config.assets %>/images',
                     src: '{,*/}*.{gif,jpeg,jpg,png}',
-                    dest: '<%%= config.dist %>/images'
+                    dest: '<%%= config.distAssets %>/images'
                 }]
             }
         },
@@ -394,7 +394,7 @@ module.exports = function (grunt) {
                     expand: true,
                     cwd: '<%%= config.assets %>/images',
                     src: '{,*/}*.svg',
-                    dest: '<%%= config.dist %>/images'
+                    dest: '<%%= config.distAssets %>/images'
                 }]
             }
         },
@@ -431,7 +431,7 @@ module.exports = function (grunt) {
         // cssmin: {
         //     dist: {
         //         files: {
-        //             '<%%= config.dist %>/styles/main.css': [
+        //             '<%%= config.distAssets %>/styles/main.css': [
         //                 '.tmp/styles/{,*/}*.css',
         //                 '<%%= config.assets %>/styles/{,*/}*.css'
         //             ]
@@ -441,8 +441,8 @@ module.exports = function (grunt) {
         // uglify: {
         //     dist: {
         //         files: {
-        //             '<%%= config.dist %>/scripts/scripts.js': [
-        //                 '<%%= config.dist %>/scripts/scripts.js'
+        //             '<%%= config.distAssets %>/scripts/scripts.js': [
+        //                 '<%%= config.assets %>/scripts/scripts.js'
         //             ]
         //         }
         //     }
