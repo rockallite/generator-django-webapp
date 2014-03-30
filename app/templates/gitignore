@@ -170,9 +170,9 @@ pip-log.txt
 #################
 .tmp/
 .sass-cache/
+dist/
 node_modules/
 bower_components/
-/dist/
 /requirements/local.txt
 /etc/uploads/
 /<%= projectName %>/my/

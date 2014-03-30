@@ -14,16 +14,20 @@
 * Optional - Bootstrap for Sass
 * Optional - Leaner Modernizr builds *(new)*
 * Auto-generated config paths of all RequireJS modules
-* Automagically transfer Django template static URL prefix (`{{ STATIC_URL }}`) to processed HTML templates
+* Automagically transfer Django template static URL prefix (`{{ STATIC_URL }}` and `{% static %}`) to processed HTML templates
+* Optimze HTML file and Django templates, including inline Javascript and CSS
 
-For more information on what `generator-webapp` can do for you, take a look at the [Grunt tasks](https://github.com/yeoman/generator-webapp/blob/master/app/templates/_package.json) used in our `package.json`.
+`generator-django-webapp` depends on heavily-patched versions of `grunt-usemin`, `clean-css` and `html-minifier` packages. For more information on what `generator-django-webapp` can do for you, take a look at the [Grunt tasks](https://github.com/rockallite/generator-django-webapp/blob/master/app/templates/_package.json) used in our `package.json`.
 
 
 ## Getting Started
 
 - Install: `npm install -g generator-django-webapp`
+- Start a Django project: `django-admin.py startproject your_project_name`
+- Set working directory to project base: `cd your_project_name`
 - Run: `yo django-webapp`
-- Run `grunt` for building and `grunt serve` for preview [*](#serve-note)
+- Set working directory for Grunt task: `cd etc`
+- Run `grunt` for building static assets
 
 
 #### Third-Party Dependencies

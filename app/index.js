@@ -54,7 +54,7 @@ AppGenerator.prototype.askFor = function askFor() {
     // welcome message
     if (!this.options['skip-welcome-message']) {
       console.log(this.yeoman);
-      console.log(chalk.magenta('Out of the box I include HTML5 Boilerplate, Console-polyfill, jQuery, and a Gruntfile.js to build your app.'));
+      console.log(chalk.magenta('Out of the box I include HTML5 Boilerplate, jQuery, and a Gruntfile.js to build your app.'));
     }
 
     // Try to figure out which is the Django project directory
@@ -93,6 +93,10 @@ AppGenerator.prototype.askFor = function askFor() {
         value: 'includeCompass',
         checked: false
       },{
+        name: 'Less',
+        value: 'includeLess',
+        checked: true
+      },{
         name: 'Modernizr',
         value: 'includeModernizr',
         checked: true
@@ -113,6 +117,7 @@ AppGenerator.prototype.askFor = function askFor() {
       // manually deal with the response, get back and store the results.
       // we change a bit this way of doing to automatically do this in the self.prompt() method.
       this.includeCompass = hasFeature('includeCompass');
+      this.includeLess = hasFeature('includeLess');
       this.includeBootstrap = hasFeature('includeBootstrap');
       this.includeModernizr = hasFeature('includeModernizr');
       this.includeRequireJS = hasFeature('includeRequireJS');
@@ -385,7 +390,9 @@ AppGenerator.prototype.djangoDirEtc = function djangoDirEtc() {
   this.mkdir('etc');
   this.mkdir('etc/static');
   this.mkdir('etc/static/styles');
-  this.mkdir('etc/static/less');
+  if (this.includeLess) {
+    this.mkdir('etc/static/less');
+  }
   this.mkdir('etc/static/scripts');
   this.mkdir('etc/static/images');
   this.mkdir('etc/static/fonts');
@@ -455,8 +462,8 @@ AppGenerator.prototype.editorConfig = function editorConfig() {
 };
 
 AppGenerator.prototype.h5bp = function h5bp() {
+  this.copy('404.html', 'etc/templates/404.html');
   this.copy('favicon.ico', 'etc/static/favicon.ico');
-  this.copy('404.html', 'etc/static/404.html');
   this.copy('robots.txt', 'etc/static/robots.txt');
   this.copy('htaccess', 'etc/static/.htaccess');
 };
@@ -471,45 +478,56 @@ AppGenerator.prototype.writeIndex = function writeIndex() {
   this.indexFile = this.readFileAsString(path.join(this.sourceRoot(), 'index.html'));
   this.indexFile = this.engine(this.indexFile, this);
 
-  // wire Bootstrap plugins
-  if (this.includeBootstrap) {
-    var bs = '../bower_components/bootstrap' + (this.includeCompass ? '-sass-official/vendor/assets/javascripts/bootstrap/' : '/js/');
-    this.indexFile = this.appendScripts(this.indexFile, 'scripts/plugins.js', [
-      bs + 'affix.js',
-      bs + 'alert.js',
-      bs + 'dropdown.js',
-      bs + 'tooltip.js',
-      bs + 'modal.js',
-      bs + 'transition.js',
-      bs + 'button.js',
-      bs + 'popover.js',
-      bs + 'carousel.js',
-      bs + 'scrollspy.js',
-      bs + 'collapse.js',
-      bs + 'tab.js'
-    ]);
+  if (this.includeRequireJS) {
+    this.copy('index2.html', 'etc/templates/index2.html');
+    this.copy('infra.js', 'etc/static/scripts/infra.js');
+    this.copy('main.js', 'etc/static/scripts/main.js');
+    this.copy('main2.js', 'etc/static/scripts/main2.js');
   }
+  else {
+    // No RequireJS
+    // wire Bootstrap plugins
+    if (this.includeBootstrap) {
+      var bs = '../bower_components/bootstrap' + (this.includeCompass ? '-sass-official/vendor/assets/javascripts/bootstrap/' : '/js/');
+      this.indexFile = this.appendScripts(this.indexFile, 'scripts/plugins.js', [
+        bs + 'affix.js',
+        bs + 'alert.js',
+        bs + 'dropdown.js',
+        bs + 'tooltip.js',
+        bs + 'modal.js',
+        bs + 'transition.js',
+        bs + 'button.js',
+        bs + 'popover.js',
+        bs + 'carousel.js',
+        bs + 'scrollspy.js',
+        bs + 'collapse.js',
+        bs + 'tab.js'
+      ]);
+    }
 
-  this.indexFile = this.appendFiles({
-    html: this.indexFile,
-    fileType: 'js',
-    optimizedPath: 'scripts/main.js',
-    sourceFileList: ['scripts/main.js'],
-    searchPath: '{app,.tmp}'
-  });
+    this.indexFile = this.appendFiles({
+      html: this.indexFile,
+      fileType: 'js',
+      optimizedPath: 'scripts/main.js',
+      sourceFileList: ['{{ STATIC_URL }}scripts/main.js'],
+      searchPath: '{app,.tmp}'
+    });
+  }
 };
 
 AppGenerator.prototype.app = function app() {
   this.write('etc/templates/index.html', this.indexFile);
 
-  if (this.coffee) {
-    this.write(
-      'etc/static/scripts/main.coffee',
-      'console.log "\'Allo from CoffeeScript!"'
-    );
-  }
-  else {
-    this.write('etc/static/scripts/main.js', 'console.log(\'\\\'Allo \\\'Allo!\');');
+  if (!this.includeRequireJS) {
+    if (this.coffee) {
+      this.write(
+        'etc/static/scripts/main.coffee',
+        'console.log "\'Allo from CoffeeScript!"'
+      );
+    }
+    else {
+      this.write('etc/static/scripts/main.js', 'console.log(\'\\\'Allo \\\'Allo!\');');
+    }
   }
 };
 
@@ -530,9 +548,10 @@ AppGenerator.prototype.install = function () {
   this.installDependencies({
     skipMessage: this.options['skip-install-message'],
     skipInstall: this.options['skip-install'],
-    callback: function () {
-      console.log(chalk.magenta('\nNotice: Please run `grunt`, `bower` or `npm` inside "etc" directory!\n'))
-      done();
-    }
+    callback: done
   });
 };
+
+AppGenerator.prototype.notice = function () {
+  console.log(chalk.magenta('\nNotice: Please run `cd etc`, then run `grunt` to build static assets.\n'));
+}
