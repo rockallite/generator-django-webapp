@@ -411,23 +411,27 @@ AppGenerator.prototype.djangoSettings = function djangoSettings() {
   var settings_file = this.projectName + '/settings.py';
   var settings_body = this.readFileAsString(settings_file);
   if (settings_body.indexOf('import os') < 0) {
-    settings_body = settings_body + '\n\nimport os';
+    settings_body = settings_body + '\nimport os\n';
   }
 
   if (settings_body.indexOf('BASE_DIR') < 0) {
-    settings_body = settings_body + '\n\nBASE_DIR = os.path.dirname(os.path.dirname(__file__))';
+    settings_body = settings_body + '\nBASE_DIR = os.path.dirname(os.path.dirname(__file__))\n';
+  }
+
+  if (settings_body.indexOf('STATIC_ROOT') < 0) {
+    settings_body = settings_body + '\n# https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-STATIC_ROOT\nSTATIC_ROOT = os.path.join(BASE_DIR, \'etc/static_collected\')\n';
   }
 
   if (settings_body.indexOf('STATICFILES_DIRS') < 0) {
-    settings_body = settings_body + '\n\nSTATICFILES_DIRS = (\n    os.path.join(BASE_DIR, \'etc/static\'),\n)';
+    settings_body = settings_body + '\nSTATICFILES_DIRS = (\n    os.path.join(BASE_DIR, \'etc/static\'),\n)\n';
   }
 
   if (settings_body.indexOf('TEMPLATE_DIRS') < 0) {
-    settings_body = settings_body + '\n\nTEMPLATE_DIRS = (\n    os.path.join(BASE_DIR, \'etc/templates\'),\n)';
+    settings_body = settings_body + '\nTEMPLATE_DIRS = (\n    os.path.join(BASE_DIR, \'etc/templates\'),\n)\n';
   }
 
   if (settings_body.indexOf('MEDIA_ROOT') < 0) {
-    settings_body = settings_body + '\n\nMEDIA_ROOT = os.path.join(BASE_DIR, \'etc/uploads\')';
+    settings_body = settings_body + '\nMEDIA_ROOT = os.path.join(BASE_DIR, \'etc/uploads\')\n';
   }
 
   fs.writeFile(settings_file, settings_body, function (err) {

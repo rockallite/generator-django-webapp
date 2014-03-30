@@ -35,6 +35,8 @@ module.exports = function (grunt) {
         config: {
             assets: 'static',
             templates: 'templates',
+            collectedAssets: 'static_collected',
+            collectedTemplates: 'templates_collected',
             dist: 'dist',
             distAssets: 'dist/static',
             distTemplates: 'dist/templates'
@@ -45,7 +47,7 @@ module.exports = function (grunt) {
             dist: {
                 // https://github.com/jrburke/r.js/blob/master/build/example.build.js
                 options: {
-                    baseUrl: '<%%= config.assets %>/scripts',
+                    baseUrl: '<%%= config.collectedAssets %>/scripts',
                     dir: '<%%= config.distAssets %>/scripts',
                     paths: {
                         jquery: '../bower_components/jquery/dist/jquery',
@@ -103,7 +105,7 @@ module.exports = function (grunt) {
             <% if (coffee) { %>
             coffee: {
                 files: ['<%%= config.assets %>/scripts/{,*/}*.{coffee,litcoffee,coffee.md}'],
-                tasks: ['coffee:dist']
+                tasks: ['coffee:server']
             },
             coffeeTest: {
                 files: ['test/spec/{,*/}*.{coffee,litcoffee,coffee.md}'],
@@ -129,7 +131,7 @@ module.exports = function (grunt) {
             },<% } %><% if (includeLess) { %>
             less: {
                 files: ['<%%= config.assets %>/less/{,*/}*.less'],
-                tasks: ['less']
+                tasks: ['less:server']
             },<% } %>
             styles: {
                 files: ['<%%= config.assets %>/styles/{,*/}*.css'],
@@ -206,7 +208,11 @@ module.exports = function (grunt) {
                 }]
             },
             server: '.tmp'<% if (includeRequireJS) { %>,
-            requirejs: '<%%= config.distAssets %>/scripts/build.txt'<% } %>
+            requirejs: '<%%= config.distAssets %>/scripts/build.txt'<% } %>,
+            collected: [
+                '<%%= config.collectedAssets %>',
+                '<%%= config.collectedTemplates %>'
+            ]            
         },
 
         // Make sure code styles are up to par and there are no obvious mistakes
@@ -219,6 +225,8 @@ module.exports = function (grunt) {
                 'Gruntfile.js',
                 '<%%= config.assets %>/scripts/{,*/}*.js',
                 '!<%%= config.assets %>/scripts/vendor/*',
+                '<%%= config.collectedAssets %>/scripts/{,*/}*.js',
+                '!<%%= config.collectedAssets %>/scripts/vendor/*',
                 'test/spec/{,*/}*.js'
             ]
         },<% if (testFramework === 'mocha') { %>
@@ -244,10 +252,19 @@ module.exports = function (grunt) {
 
         // Compiles CoffeeScript to JavaScript
         coffee: {
-            dist: {
+            server: {
                 files: [{
                     expand: true,
                     cwd: '<%%= config.assets %>/scripts',
+                    src: '{,*/}*.{coffee,litcoffee,coffee.md}',
+                    dest: '.tmp/scripts',
+                    ext: '.js'
+                }]
+            },
+            dist: {
+                files: [{
+                    expand: true,
+                    cwd: '<%%= config.collectedAssets %>/scripts',
                     src: '{,*/}*.{coffee,litcoffee,coffee.md}',
                     dest: '.tmp/scripts',
                     ext: '.js'
@@ -267,13 +284,8 @@ module.exports = function (grunt) {
         // Compiles Sass to CSS and generates necessary files if requested
         compass: {
             options: {
-                sassDir: '<%%= config.assets %>/styles',
                 cssDir: '.tmp/styles',
                 generatedImagesDir: '.tmp/images/generated',
-                imagesDir: '<%%= config.assets %>/images',
-                javascriptsDir: '<%%= config.assets %>/scripts',
-                fontsDir: '<%%= config.assets %>/fonts',
-                importPath: '<%%= config.assets %>/bower_components',
                 httpImagesPath: '/images',
                 httpGeneratedImagesPath: '/images/generated',
                 httpFontsPath: '/fonts',
@@ -282,11 +294,21 @@ module.exports = function (grunt) {
             },
             dist: {
                 options: {
+                    sassDir: '<%%= config.collectedAssets %>/styles',
+                    imagesDir: '<%%= config.collectedAssets %>/images',
+                    javascriptsDir: '<%%= config.collectedAssets %>/scripts',
+                    fontsDir: '<%%= config.collectedAssets %>/fonts',
+                    importPath: '<%%= config.collectedAssets %>/bower_components',
                     generatedImagesDir: '<%%= config.distAssets %>/images/generated'
                 }
             },
             server: {
                 options: {
+                    sassDir: '<%%= config.assets %>/styles',
+                    imagesDir: '<%%= config.assets %>/images',
+                    javascriptsDir: '<%%= config.assets %>/scripts',
+                    fontsDir: '<%%= config.assets %>/fonts',
+                    importPath: '<%%= config.assets %>/bower_components',
                     debugInfo: true
                 }
             }
@@ -294,7 +316,21 @@ module.exports = function (grunt) {
         
         // Compile LESS files to CSS.
         less: {
-            compile: {
+            dist: {
+                options: {
+                    strictMath: true,
+                },
+                files: [{
+                    // Dynamic expansion:
+                    // http://gruntjs.com/configuring-tasks#building-the-files-object-dynamically
+                    expand: true,
+                    cwd: '<%%= config.collectedAssets %>/less',
+                    src: ['{,*/}*.less'],
+                    dest: '.tmp/styles/',
+                    ext: '.css'
+                }]
+            },
+            server: {
                 options: {
                     strictMath: true,
                 },
@@ -356,7 +392,7 @@ module.exports = function (grunt) {
         // additional tasks can operate on them
         useminPrepare: {
             options: {
-                root: '<%%= config.assets %>',
+                root: '<%%= config.collectedAssets %>',
                 dest: '<%%= config.distAssets %>',
                 useDjangoFlow: true
             },
@@ -381,7 +417,7 @@ module.exports = function (grunt) {
             dist: {
                 files: [{
                     expand: true,
-                    cwd: '<%%= config.assets %>/images',
+                    cwd: '<%%= config.collectedAssets %>/images',
                     src: '{,*/}*.{gif,jpeg,jpg,png}',
                     dest: '<%%= config.distAssets %>/images'
                 }]
@@ -392,7 +428,7 @@ module.exports = function (grunt) {
             dist: {
                 files: [{
                     expand: true,
-                    cwd: '<%%= config.assets %>/images',
+                    cwd: '<%%= config.collectedAssets %>/images',
                     src: '{,*/}*.svg',
                     dest: '<%%= config.distAssets %>/images'
                 }]
@@ -433,7 +469,7 @@ module.exports = function (grunt) {
         //         files: {
         //             '<%%= config.distAssets %>/styles/main.css': [
         //                 '.tmp/styles/{,*/}*.css',
-        //                 '<%%= config.assets %>/styles/{,*/}*.css'
+        //                 '<%%= config.collectedAssets %>/styles/{,*/}*.css'
         //             ]
         //         }
         //     }
@@ -442,7 +478,7 @@ module.exports = function (grunt) {
         //     dist: {
         //         files: {
         //             '<%%= config.distAssets %>/scripts/scripts.js': [
-        //                 '<%%= config.assets %>/scripts/scripts.js'
+        //                 '<%%= config.collectedAssets %>/scripts/scripts.js'
         //             ]
         //         }
         //     }
@@ -458,7 +494,7 @@ module.exports = function (grunt) {
                     // Static assets
                     expand: true,
                     dot: true,
-                    cwd: '<%%= config.assets %>',
+                    cwd: '<%%= config.collectedAssets %>',
                     dest: '<%%= config.distAssets %>',
                     src: [
                         '*.{ico,png,txt}',
@@ -478,11 +514,18 @@ module.exports = function (grunt) {
                     expand: true,
                     dot: true,<% if (includeCompass) { %>
                     cwd: '.',
-                    src: ['<%%= config.assets %>bower_components/bootstrap-sass-official/vendor/assets/fonts/bootstrap/*.*'],<% } else { %>
-                    cwd: '<%%= config.assets %>bower_components/bootstrap/dist',
+                    src: ['<%%= config.collectedAssets %>bower_components/bootstrap-sass-official/vendor/assets/fonts/bootstrap/*.*'],<% } else { %>
+                    cwd: '<%%= config.collectedAssets %>bower_components/bootstrap/dist',
                     src: ['fonts/*.*'],<% } %>
                     dest: '<%%= config.distAssets %>'
                 }<% } %>]
+            },
+            distStyles: {
+                expand: true,
+                dot: true,
+                cwd: '<%%= config.collectedAssets %>/styles',
+                dest: '.tmp/styles/',
+                src: '{,*/}*.css'
             },
             styles: {
                 expand: true,
@@ -496,7 +539,7 @@ module.exports = function (grunt) {
         // Generates a custom Modernizr build that includes only the tests you
         // reference in your app
         modernizr: {
-            devFile: '<%%= config.assets %>/bower_components/modernizr/modernizr.js',
+            devFile: '<%%= config.collectedAssets %>/bower_components/modernizr/modernizr.js',
             outputFile: '<%%= config.distAssets %>/scripts/vendor/modernizr.js',
             files: [
                 '<%%= config.distAssets %>/scripts/{,*/}*.js',
@@ -510,25 +553,39 @@ module.exports = function (grunt) {
         concurrent: {
             server: [<% if (includeCompass) { %>
                 'compass:server',<% } %><% if (includeLess) { %>
-                'less',<% } %><% if (coffee) { %>
-                'coffee:dist',<% } %>
+                'less:server',<% } %><% if (coffee) { %>
+                'coffee:server',<% } %>
                 'copy:styles'
             ],
             test: [<% if (coffee) { %>
-                'coffee',<% } %>
+                'coffee:test',<% } %>
                 'copy:styles'
             ],
             dist: [<% if (coffee) { %>
-                'coffee',<% } %><% if (includeCompass) { %>
-                'compass',<% } %><% if (includeLess) { %>
-                'less',<% } %>
-                'copy:styles',
+                'coffee:dist',<% } %><% if (includeCompass) { %>
+                'compass:dist',<% } %><% if (includeLess) { %>
+                'less:dist',<% } %>
+                'copy:distStyles',
                 'imagemin',
                 'svgmin'
             ]
         }
     });
 
+
+    grunt.registerTask('serve', function (target) {
+        if (target === 'dist') {
+            return grunt.task.run(['build', 'connect:dist:keepalive']);
+        }
+
+        grunt.task.run([
+            'clean:server',
+            'concurrent:server',
+            'autoprefixer',
+            'connect:livereload',
+            'watch'
+        ]);
+    });
 
     grunt.registerTask('serve', function (target) {
         if (target === 'dist') {
@@ -565,7 +622,24 @@ module.exports = function (grunt) {
         ]);
     });
 
+    grunt.registerTask('checkcollected', function () {
+        var fs = require('fs');
+        var config = grunt.config.get('config');
+        if (!fs.existsSync(config.collectedAssets) || !fs.existsSync(config.collectedTemplates)) {
+            /*jshint multistr:true */
+            grunt.fail.fatal(grunt.template.process('\
+Collect assets and templates into the following directories first:\n\
+  * <%%= config.collectedAssets %>\n\
+  * <%%= config.collectedTemplates %>\n\n\
+Hints: You might need to run `../manage.py collectstatic` to collect \
+static assets, and some custom Fabric tasks to collect templates. \n\n\
+If you want to try out the `build` task, just copy `<%%= config.assets %>` to `<%%= config.collectedAssets %>` and \
+`<%%= config.templates %>` to `<%%= config.collectedTemplates %>`, then try again.'));
+        }
+    });
+
     grunt.registerTask('build', [
+        'checkcollected',
         'clean:dist',
         'useminPrepare',<% if (includeRequireJS) { %>
         'requirejs',
@@ -581,7 +655,8 @@ module.exports = function (grunt) {
         'requirejspaths',
         'processhtml',<% } %>
         'usemin',
-        'htmlmin'
+        'htmlmin',
+        'clean:collected'
     ]);
 
     grunt.registerTask('default', [
