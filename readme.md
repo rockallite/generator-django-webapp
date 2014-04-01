@@ -13,11 +13,11 @@
 * Mocha Unit Testing with PhantomJS
 * Optional - Bootstrap for Sass
 * Optional - Leaner Modernizr builds *(new)*
-* Auto-generated config paths of all RequireJS modules
-* Automagically transfer Django template static URL prefix (`{{ STATIC_URL }}` and `{% static %}`) to processed HTML templates
-* Optimze HTML file and Django templates, including inline Javascript and CSS
+* Auto-generated config paths of all RequireJS modules *(new)*
+* Automagically handle `{{ STATIC_URL }}` and `{% static %}` template tags *(new)*
+* Optimze HTML files and Django templates, including inline Javascript and CSS (using grunt-htmlcompressor) *(new)*
 
-`generator-django-webapp` depends on heavily-patched versions of `grunt-usemin`, `clean-css` and `html-minifier` packages. For more information on what `generator-django-webapp` can do for you, take a look at the [Grunt tasks](https://github.com/rockallite/generator-django-webapp/blob/master/app/templates/_package.json) used in our `package.json`.
+`generator-django-webapp` depends on a heavily-patched version of `grunt-usemin`. For more information on what `generator-django-webapp` can do for you, take a look at the [Grunt tasks](https://github.com/rockallite/generator-django-webapp/blob/master/app/templates/Gruntfile.js).
 
 
 ## Getting Started
@@ -28,6 +28,7 @@
 - Run: `yo django-webapp`
 - Set working directory for Grunt task: `cd etc`
 - Run `grunt` for building static assets
+- If everything is OK, the built assets are in `etc/dist` directory
 
 
 #### Third-Party Dependencies
