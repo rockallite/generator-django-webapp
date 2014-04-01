@@ -14,9 +14,7 @@
     "grunt-contrib-cssmin": "~0.7.0",
     "grunt-contrib-connect": "~0.5.0",
     "grunt-contrib-clean": "~0.5.0",
-    "clean-css": "git://github.com/rockallite/clean-css.git#develop",
-    "html-minifier": "git://github.com/rockallite/html-minifier.git#develop",
-    "grunt-contrib-htmlmin": "~0.2.0",
+    "grunt-htmlcompressor": "~0.1.10",
     "grunt-bower-install": "~1.0.0",
     "grunt-contrib-imagemin": "~0.4.1",
     "grunt-contrib-watch": "~0.5.2",<% if (testFramework === 'jasmine') { %>

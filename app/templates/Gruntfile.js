@@ -15,7 +15,7 @@ module.exports = function (grunt) {
     // Time how long tasks take. Can help when optimizing build times
     require('time-grunt')(grunt);
 
-    <% if (includeRequireJS) { %>// ReuireJS configuration for distribution
+    <% if (includeRequireJS) { %>// ReuireJS configuration sample for distribution
     var requirejsDistModules = [
         {
             name: 'main',
@@ -89,8 +89,8 @@ module.exports = function (grunt) {
             dist: {
                 files: [{
                     expand: true,
-                    cwd: '<%%= config.templates %>',
-                    src: '{,*/}*.html',
+                    cwd: '<%%= config.collectedTemplates %>',
+                    src: '**/*.html',
                     dest: '<%%= config.distTemplates %>'
                 }]
             }
@@ -104,37 +104,37 @@ module.exports = function (grunt) {
             // },
             <% if (coffee) { %>
             coffee: {
-                files: ['<%%= config.assets %>/scripts/{,*/}*.{coffee,litcoffee,coffee.md}'],
+                files: ['<%%= config.assets %>/scripts/**/*.{coffee,litcoffee,coffee.md}'],
                 tasks: ['coffee:server']
             },
             coffeeTest: {
-                files: ['test/spec/{,*/}*.{coffee,litcoffee,coffee.md}'],
+                files: ['test/spec/**/*.{coffee,litcoffee,coffee.md}'],
                 tasks: ['coffee:test', 'test:watch']
             },<% } else { %>
             js: {
-                files: ['<%%= config.assets %>/scripts/{,*/}*.js'],
+                files: ['<%%= config.assets %>/scripts/**/*.js'],
                 tasks: ['jshint'],
                 options: {
                     livereload: true
                 }
             },
             jstest: {
-                files: ['test/spec/{,*/}*.js'],
+                files: ['test/spec/**/*.js'],
                 tasks: ['test:watch']
             },<% } %>
             gruntfile: {
                 files: ['Gruntfile.js']
             },<% if (includeCompass) { %>
             compass: {
-                files: ['<%%= config.assets %>/styles/{,*/}*.{scss,sass}'],
+                files: ['<%%= config.assets %>/styles/**/*.{scss,sass}'],
                 tasks: ['compass:server', 'autoprefixer']
             },<% } %><% if (includeLess) { %>
             less: {
-                files: ['<%%= config.assets %>/less/{,*/}*.less'],
+                files: ['<%%= config.assets %>/less/**/*.less'],
                 tasks: ['less:server']
             },<% } %>
             styles: {
-                files: ['<%%= config.assets %>/styles/{,*/}*.css'],
+                files: ['<%%= config.assets %>/styles/**/*.css'],
                 tasks: ['newer:copy:styles', 'autoprefixer']
             },
             livereload: {
@@ -142,10 +142,10 @@ module.exports = function (grunt) {
                     livereload: '<%%= connect.options.livereload %>'
                 },
                 files: [
-                    '<%%= config.templates %>/{,*/}*.html',
-                    '.tmp/styles/{,*/}*.css',<% if (coffee) { %>
-                    '.tmp/scripts/{,*/}*.js',<% } %>
-                    '<%%= config.assets %>/images/{,*/}*'
+                    '<%%= config.templates %>/**/*.html',
+                    '.tmp/styles/**/*.css',<% if (coffee) { %>
+                    '.tmp/scripts/**/*.js',<% } %>
+                    '<%%= config.assets %>/images/**/*'
                 ]
             }
         },
@@ -212,7 +212,7 @@ module.exports = function (grunt) {
             collected: [
                 '<%%= config.collectedAssets %>',
                 '<%%= config.collectedTemplates %>'
-            ]            
+            ]
         },
 
         // Make sure code styles are up to par and there are no obvious mistakes
@@ -223,11 +223,11 @@ module.exports = function (grunt) {
             },
             all: [
                 'Gruntfile.js',
-                '<%%= config.assets %>/scripts/{,*/}*.js',
+                '<%%= config.assets %>/scripts/**/*.js',
                 '!<%%= config.assets %>/scripts/vendor/*',
-                '<%%= config.collectedAssets %>/scripts/{,*/}*.js',
+                '<%%= config.collectedAssets %>/scripts/**/*.js',
                 '!<%%= config.collectedAssets %>/scripts/vendor/*',
-                'test/spec/{,*/}*.js'
+                'test/spec/**/*.js'
             ]
         },<% if (testFramework === 'mocha') { %>
 
@@ -245,7 +245,7 @@ module.exports = function (grunt) {
         jasmine: {
             all: {
                 options: {
-                    specs: 'test/spec/{,*/}*.js'
+                    specs: 'test/spec/**/*.js'
                 }
             }
         },<% } %><% if (coffee) { %>
@@ -256,7 +256,7 @@ module.exports = function (grunt) {
                 files: [{
                     expand: true,
                     cwd: '<%%= config.assets %>/scripts',
-                    src: '{,*/}*.{coffee,litcoffee,coffee.md}',
+                    src: '**/*.{coffee,litcoffee,coffee.md}',
                     dest: '.tmp/scripts',
                     ext: '.js'
                 }]
@@ -265,7 +265,7 @@ module.exports = function (grunt) {
                 files: [{
                     expand: true,
                     cwd: '<%%= config.collectedAssets %>/scripts',
-                    src: '{,*/}*.{coffee,litcoffee,coffee.md}',
+                    src: '**/*.{coffee,litcoffee,coffee.md}',
                     dest: '.tmp/scripts',
                     ext: '.js'
                 }]
@@ -274,7 +274,7 @@ module.exports = function (grunt) {
                 files: [{
                     expand: true,
                     cwd: 'test/spec',
-                    src: '{,*/}*.{coffee,litcoffee,coffee.md}',
+                    src: '**/*.{coffee,litcoffee,coffee.md}',
                     dest: '.tmp/spec',
                     ext: '.js'
                 }]
@@ -313,7 +313,7 @@ module.exports = function (grunt) {
                 }
             }
         },<% } %><% if (includeLess) { %>
-        
+
         // Compile LESS files to CSS.
         less: {
             dist: {
@@ -325,8 +325,8 @@ module.exports = function (grunt) {
                     // http://gruntjs.com/configuring-tasks#building-the-files-object-dynamically
                     expand: true,
                     cwd: '<%%= config.collectedAssets %>/less',
-                    src: ['{,*/}*.less'],
-                    dest: '.tmp/styles/',
+                    src: ['**/*.less'],
+                    dest: '.tmp/styles',
                     ext: '.css'
                 }]
             },
@@ -339,8 +339,8 @@ module.exports = function (grunt) {
                     // http://gruntjs.com/configuring-tasks#building-the-files-object-dynamically
                     expand: true,
                     cwd: '<%%= config.assets %>/less',
-                    src: ['{,*/}*.less'],
-                    dest: '.tmp/styles/',
+                    src: ['**/*.less'],
+                    dest: '.tmp/styles',
                     ext: '.css'
                 }]
             }
@@ -354,9 +354,9 @@ module.exports = function (grunt) {
             dist: {
                 files: [{
                     expand: true,
-                    cwd: '.tmp/styles/',
-                    src: '{,*/}*.css',
-                    dest: '.tmp/styles/'
+                    cwd: '.tmp',
+                    src: '{,*/}{styles,css}/**/*.css',
+                    dest: '.tmp'
                 }]
             }
         },
@@ -365,13 +365,13 @@ module.exports = function (grunt) {
         // bowerInstall: {
         //     app: {
         //         src: ['<%%= config.templates %>/index.html'],
-        //         ignorePath: '<%%= config.assets %>/',<% if (includeCompass) { %>
+        //         ignorePath: '<%%= config.assets %>',<% if (includeCompass) { %>
         //         exclude: ['<%%= config.assets %>/bower_components/bootstrap-sass-official/vendor/assets/javascripts/bootstrap.js']<% } else { %>
         //         exclude: ['<%%= config.assets %>/bower_components/bootstrap/dist/js/bootstrap.js']<% } %>
         //     }<% if (includeCompass) { %>,
         //     sass: {
-        //         src: ['<%%= config.assets %>/styles/{,*/}*.{scss,sass}'],
-        //         ignorePath: '<%%= config.assets %>/bower_components/'
+        //         src: ['<%%= config.assets %>/styles/**/*.{scss,sass}'],
+        //         ignorePath: '<%%= config.assets %>/bower_components'
         //     }<% } %>
         // },
 
@@ -379,10 +379,10 @@ module.exports = function (grunt) {
         filerev: {
             files: {
                 src: [
-                    '<%%= config.distAssets %>/scripts/{,*/}*.js',
-                    '<%%= config.distAssets %>/styles/{,*/}*.css',
-                    '<%%= config.distAssets %>/images/{,*/}*.*',
-                    '<%%= config.distAssets %>/fonts/{,*/}*.*'
+                    '<%%= config.distAssets %>/{,*/}{scripts,js}/**/*.js',
+                    '<%%= config.distAssets %>/{,*/}{styles,css}/**/*.css',
+                    '<%%= config.distAssets %>/{,*/}{images,img}/**/*.*',
+                    '<%%= config.distAssets %>/{,*/}{fonts,font}/**/*.*'
                 ]
             }
         },
@@ -396,20 +396,29 @@ module.exports = function (grunt) {
                 dest: '<%%= config.distAssets %>',
                 useDjangoFlow: true
             },
-            html: '<%%= config.templates %>/{,*/}*.html'
+            html: '<%%= config.collectedTemplates %>/**/*.html'
         },
 
         // Performs rewrites based on rev and the useminPrepare configuration
         usemin: {
             options: {
-                assetsDirs: [
-                    '<%%= config.distAssets %>',
-                    '<%%= config.distAssets %>/styles'
-                ],
                 useDjangoPatterns: true
             },
-            html: ['<%%= config.distTemplates %>/{,*/}*.html'],
-            css: ['<%%= config.distAssets %>/styles/{,*/}*.css']
+            html: {
+                src: ['<%%= config.distTemplates %>/**/*.html'],
+                options: {
+                    assetsDirs: ['<%%= config.distAssets %>']
+                }
+            },
+            css: {
+                src: ['<%%= config.distAssets %>/{,*/}{styles,css}/**/*.css'],
+                options: {
+                    assetsDirs: [
+                        '',  // Search from directory of current file first
+                        '<%%= config.distAssets %>'
+                    ]
+                }
+            }
         },
 
         // The following *-min tasks produce minified files in the dist folder
@@ -417,9 +426,9 @@ module.exports = function (grunt) {
             dist: {
                 files: [{
                     expand: true,
-                    cwd: '<%%= config.collectedAssets %>/images',
-                    src: '{,*/}*.{gif,jpeg,jpg,png}',
-                    dest: '<%%= config.distAssets %>/images'
+                    cwd: '<%%= config.collectedAssets %>',
+                    src: '{,*/}{images,img}/**/*.{gif,jpeg,jpg,png}',
+                    dest: '<%%= config.distAssets %>'
                 }]
             }
         },
@@ -428,64 +437,86 @@ module.exports = function (grunt) {
             dist: {
                 files: [{
                     expand: true,
-                    cwd: '<%%= config.collectedAssets %>/images',
-                    src: '{,*/}*.svg',
-                    dest: '<%%= config.distAssets %>/images'
+                    cwd: '<%%= config.collectedAssets %>',
+                    src: '{,*/}{images,img}/**/*.svg',
+                    dest: '<%%= config.distAssets %>'
                 }]
             }
         },
 
-        htmlmin: {
-            dist: {
+        // grunt-htmlcompressor is Java-based and Django-friendly. (grunt-contrib-htmlmin crashes
+        // sometimes when minifying Django templates.) However, it runs HORRIBLY SLOW if
+        // mis-configured. See performance hints below.
+        htmlcompressor: {
+            compress: {
                 options: {
-                    collapseBooleanAttributes: true,
-                    collapseWhitespace: true,
-                    removeAttributeQuotes: true,
-                    removeCommentsFromCDATA: true,
-                    removeEmptyAttributes: true,
-                    removeOptionalTags: false,
-                    removeRedundantAttributes: true,
-                    useShortDoctype: true,
-                    minifyJS: true,
-                    minifyCSS: true,
-                    minifyCSSOptions: {
-                        keepURLWhitespaces: true
-                    }
+                    // Options can be whatever htmlcompressor accepts.
+                    // https://code.google.com/p/htmlcompressor/
+                    type: 'html',
+                    removeSurroundingSpaces: 'all',
+                    compressCss: true,
+                    compressJs: true,
+                    jsCompressor: 'closure',
+
+                    // *** 10x PERFORMANCE BOOST HERE ***
+
+                    // Hint: Put the output directory here. DO NOT USE "dest" of a file mapping.
+                    output: '<%%= config.distTemplates %>',
+
+                    // Hint: Compress files inside sub-directories of the input directory.
+                    recursive: true,
+
+                    // Hint: This is IMPORTANT. By default, grunt-htmlcompressor grabs the
+                    // minified content from stdout of the Java process and writes it to a file
+                    // specified by "dest" (which is `undefined` in this case). By specifying
+                    // "processName" option as the following function, it will be call at
+                    // runtime and generate a "black hole" for writing, so Grunt won't crash.
+                    // This function is consumed by grunt-htmlcompressor only.
+                    processName: function() { return '/dev/null'; }
                 },
-                files: [{
-                    expand: true,
-                    cwd: '<%%= config.distTemplates %>',
-                    src: '{,*/}*.html',
-                    dest: '<%%= config.distTemplates %>'
-                }]
+                // Hint: Put your input directory here. DO NOT specify files using globbing
+                // or dynamic patterns. Otherwise, grunt-htmlcompressor will spawn a Java process
+                // for EACH FILE, which is INSANE. Also, "dest" is useless. You should instead
+                // put the output directory in the "output" option above. If you need multiple
+                // input directories, a multi-target configuration for this task is preferred.
+                src: '<%%= config.distTemplates %>'
             }
         },
 
         // By default, your `index.html`'s <!-- Usemin block --> will take care of
         // minification. These next options are pre-configured if you do not wish
         // to use the Usemin blocks.
-        // cssmin: {
-        //     dist: {
-        //         files: {
-        //             '<%%= config.distAssets %>/styles/main.css': [
-        //                 '.tmp/styles/{,*/}*.css',
-        //                 '<%%= config.collectedAssets %>/styles/{,*/}*.css'
-        //             ]
-        //         }
-        //     }
-        // },
-        // uglify: {
-        //     dist: {
-        //         files: {
-        //             '<%%= config.distAssets %>/scripts/scripts.js': [
-        //                 '<%%= config.collectedAssets %>/scripts/scripts.js'
-        //             ]
-        //         }
-        //     }
-        // },
         // concat: {
         //     dist: {}
         // },
+
+        // Only put CSS files here which are not referenced by <!-- Usemin block -->
+        // e.g. Those of Django Admin app (whose templates are certainly not Usemin-aware)
+        cssmin: {
+            dist: {
+                files: [{
+                    // CSS minification for admin app
+                    expand: true,
+                    cwd: '<%%= config.collectedAssets %>',
+                    src: 'admin/css/**/*.css',
+                    dest: '<%%= config.distAssets %>'
+                }]
+            }
+        },
+
+        // Only put JavaScript files here which are not referenced by <!-- Usemin block -->
+        // e.g. Those of Django Admin app (whose templates are certainly not Usemin-aware)
+        uglify: {
+            dist: {
+                files: [{
+                    // JavaScript uglification for admin app
+                    expand: true,
+                    cwd: '<%%= config.collectedAssets %>',
+                    src: 'admin/js/**/*.js',
+                    dest: '<%%= config.distAssets %>'
+                }]
+            }
+        },
 
         // Copies remaining files to places other tasks can use
         copy: {
@@ -495,44 +526,63 @@ module.exports = function (grunt) {
                     expand: true,
                     dot: true,
                     cwd: '<%%= config.collectedAssets %>',
-                    dest: '<%%= config.distAssets %>',
                     src: [
                         '*.{ico,png,txt}',
                         '.htaccess',
-                        'images/{,*/}*.webp',
-                        'fonts/{,*/}*.*'
-                    ]
+                        '{,*/}{images,img}/**/*.webp',
+                        '{,*/}fonts/**/*.*'
+                    ],
+                    dest: '<%%= config.distAssets %>'
                 }, {
                     // Template files
                     expand: true,
                     dot: true,
-                    cwd: '<%%= config.templates %>',
-                    dest: '<%%= config.distTemplates %>',
-                    src: ['{,*/}*.html']
+                    cwd: '<%%= config.collectedTemplates %>',
+                    src: '**/*.html',
+                    dest: '<%%= config.distTemplates %>'
                 }<% if (includeBootstrap) { %>, {
                     // Bootstrap
                     expand: true,
                     dot: true,<% if (includeCompass) { %>
                     cwd: '.',
-                    src: ['<%%= config.collectedAssets %>bower_components/bootstrap-sass-official/vendor/assets/fonts/bootstrap/*.*'],<% } else { %>
-                    cwd: '<%%= config.collectedAssets %>bower_components/bootstrap/dist',
-                    src: ['fonts/*.*'],<% } %>
+                    src: '<%%= config.collectedAssets %>/bower_components/bootstrap-sass-official/vendor/assets/fonts/bootstrap/*.*',<% } else { %>
+                    cwd: '<%%= config.collectedAssets %>/bower_components/bootstrap/dist',
+                    src: 'fonts/*.*',<% } %>
                     dest: '<%%= config.distAssets %>'
                 }<% } %>]
             },
-            distStyles: {
+            // Copy all CSS files for concat task
+            diststyles: {
                 expand: true,
                 dot: true,
-                cwd: '<%%= config.collectedAssets %>/styles',
-                dest: '.tmp/styles/',
-                src: '{,*/}*.css'
+                cwd: '<%%= config.collectedAssets %>',
+                src: '{,*/}{styles,css}/**/*.css',
+                dest: '.tmp'
             },
             styles: {
                 expand: true,
                 dot: true,
-                cwd: '<%%= config.assets %>/styles',
-                dest: '.tmp/styles/',
-                src: '{,*/}*.css'
+                cwd: '<%%= config.assets %>',
+                src: '{,*/}{styles,css}/**/*.css',
+                dest: '.tmp'
+            },
+            // Simulate the collection process
+            simcollected: {
+                files: [{
+                    // Static assets
+                    expand: true,
+                    dot: true,
+                    cwd: '<%%= config.assets %>',
+                    src: '**',
+                    dest: '<%%= config.collectedAssets %>'
+                }, {
+                    // Templates
+                    expand: true,
+                    dot: true,
+                    cwd: '<%%= config.templates %>',
+                    src: '**',
+                    dest: '<%%= config.collectedTemplates %>'
+                }]
             }
         },<% if (includeModernizr) { %>
 
@@ -542,9 +592,9 @@ module.exports = function (grunt) {
             devFile: '<%%= config.collectedAssets %>/bower_components/modernizr/modernizr.js',
             outputFile: '<%%= config.distAssets %>/scripts/vendor/modernizr.js',
             files: [
-                '<%%= config.distAssets %>/scripts/{,*/}*.js',
-                '<%%= config.distAssets %>/styles/{,*/}*.css',
-                '!<%%= config.distAssets %>/scripts/vendor/*'
+                '<%%= config.distAssets %>/{,*/}{scripts,js}/**/*.js',
+                '<%%= config.distAssets %>/{,*/}{styles,css}/**/*.css',
+                '!<%%= config.distAssets %>/{,*/}{scripts,js}/vendor/*'
             ],
             uglify: true
         },<% } %>
@@ -565,7 +615,7 @@ module.exports = function (grunt) {
                 'coffee:dist',<% } %><% if (includeCompass) { %>
                 'compass:dist',<% } %><% if (includeLess) { %>
                 'less:dist',<% } %>
-                'copy:distStyles',
+                'copy:diststyles',
                 'imagemin',
                 'svgmin'
             ]
@@ -633,8 +683,8 @@ Collect assets and templates into the following directories first:\n\
   * <%%= config.collectedTemplates %>\n\n\
 Hints: You might need to run `../manage.py collectstatic` to collect \
 static assets, and some custom Fabric tasks to collect templates. \n\n\
-If you want to try out the `build` task, just copy `<%%= config.assets %>` to `<%%= config.collectedAssets %>` and \
-`<%%= config.templates %>` to `<%%= config.collectedTemplates %>`, then try again.'));
+If you want to try out the `build` task, run `grunt copy:simcollected` \
+to simulate the collection process, then try again.'));
         }
     });
 
@@ -655,7 +705,7 @@ If you want to try out the `build` task, just copy `<%%= config.assets %>` to `<
         'requirejspaths',
         'processhtml',<% } %>
         'usemin',
-        'htmlmin',
+        'htmlcompressor',
         'clean:collected'
     ]);
 
