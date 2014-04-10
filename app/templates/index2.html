@@ -10,15 +10,15 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="shortcut icon" href="/favicon.ico">
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-        <!-- build:css styles/vendor.css -->
-        <% if (includeBootstrap && !includeCompass) { %><link rel="stylesheet" href="{{ STATIC_URL }}bower_components/bootstrap/dist/css/bootstrap.css">
-        <link rel="stylesheet" href="{{ STATIC_URL }}bower_components/bootstrap/dist/css/bootstrap-theme.css"><% } %>
+        <!-- build:css {% static styles/vendor.css %} -->
+        <% if (includeBootstrap && !includeCompass) { %><link rel="stylesheet" href="{% static bower_components/bootstrap/dist/css/bootstrap.css %}">
+        <link rel="stylesheet" href="{% static bower_components/bootstrap/dist/css/bootstrap-theme.css %}"><% } %>
         <!-- endbuild -->
-        <!-- build:css(.tmp) styles/main.css -->
-        <link rel="stylesheet" href="{{ STATIC_URL }}styles/main.css">
+        <!-- build:css(.tmp) {% static styles/main.css %} -->
+        <link rel="stylesheet" href="{% static styles/main.css %}">
         <!-- endbuild --><% if (includeModernizr) { %>
-        <!-- build:js scripts/vendor/modernizr.js -->
-        <script src="{{ STATIC_URL }}bower_components/modernizr/modernizr.js"></script>
+        <!-- build:js {% static scripts/vendor/modernizr.js %} -->
+        <script src="{% static bower_components/modernizr/modernizr.js %}"></script>
         <!-- endbuild -->
         <% } %>
     </head>
@@ -80,8 +80,8 @@
         <% } %>
 
         <% if (includeRequireJS) { %>
-        <!-- build:js scripts/vendor/require.js -->
-        <script src="{{ STATIC_URL }}bower_components/requirejs/require.js"></script>
+        <!-- build:js {% static scripts/vendor/require.js %} -->
+        <script src="{% static bower_components/requirejs/require.js %}"></script>
         <!-- endbuild -->
 
         <!-- process:remove:dist -->
@@ -90,8 +90,8 @@
         require.config({
             baseUrl: 'scripts',
             paths: {
-                jquery: '{{ STATIC_URL }}bower_components/jquery/dist/jquery',
-                bootstrap: '{{ STATIC_URL }}bower_components/bootstrap/dist/js/bootstrap'
+                jquery: '{% static bower_components/jquery/dist/jquery %}',
+                bootstrap: '{% static bower_components/bootstrap/dist/js/bootstrap %}'
             },
             shim: {
                 'bootstrap': ['jquery']
@@ -108,12 +108,12 @@
         require(['main2'], function () {});
         </script>
         <% } else { %>
-        <!-- build:js scripts/vendor.js -->
-        <script src="{{ STATIC_URL }}bower_components/jquery/dist/jquery.js"></script>
+        <!-- build:js {% static scripts/vendor.js %} -->
+        <script src="{% static bower_components/jquery/dist/jquery.js %}"></script>
         <!-- endbuild -->
 
-        <!-- build:js scripts/main.js -->
-        <script src="{{ STATIC_URL }}scripts/main.js"></script>
+        <!-- build:js {% static scripts/main.js %} -->
+        <script src="{% static scripts/main.js %}"></script>
         <!-- endbuild -->
         <% } %>
 

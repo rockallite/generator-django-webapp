@@ -10,14 +10,14 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="shortcut icon" href="/favicon.ico">
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-        <!-- build:css styles/vendor.css -->
+        <!-- build:css {{ STATIC_URL }}styles/vendor.css -->
         <% if (includeBootstrap && !includeCompass) { %><link rel="stylesheet" href="{{ STATIC_URL }}bower_components/bootstrap/dist/css/bootstrap.css">
         <link rel="stylesheet" href="{{ STATIC_URL }}bower_components/bootstrap/dist/css/bootstrap-theme.css"><% } %>
         <!-- endbuild -->
-        <!-- build:css(.tmp) styles/main.css -->
+        <!-- build:css(.tmp) {{ STATIC_URL }}styles/main.css -->
         <link rel="stylesheet" href="{{ STATIC_URL }}styles/main.css">
         <!-- endbuild --><% if (includeModernizr) { %>
-        <!-- build:js scripts/vendor/modernizr.js -->
+        <!-- build:js {{ STATIC_URL }}scripts/vendor/modernizr.js -->
         <script src="{{ STATIC_URL }}bower_components/modernizr/modernizr.js"></script>
         <!-- endbuild -->
         <% } %>
@@ -80,7 +80,7 @@
         <% } %>
 
         <% if (includeRequireJS) { %>
-        <!-- build:js scripts/vendor/require.js -->
+        <!-- build:js {{ STATIC_URL }}scripts/vendor/require.js -->
         <script src="{{ STATIC_URL }}bower_components/requirejs/require.js"></script>
         <!-- endbuild -->
 
@@ -108,11 +108,11 @@
         require(['main'], function () {});
         </script>
         <% } else { %>
-        <!-- build:js scripts/vendor.js -->
+        <!-- build:js {{ STATIC_URL }}scripts/vendor.js -->
         <script src="{{ STATIC_URL }}bower_components/jquery/dist/jquery.js"></script>
         <!-- endbuild -->
 
-        <!-- build:js scripts/main.js -->
+        <!-- build:js {{ STATIC_URL }}scripts/main.js -->
         <script src="{{ STATIC_URL }}scripts/main.js"></script>
         <!-- endbuild -->
         <% } %>
