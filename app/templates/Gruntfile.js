@@ -448,7 +448,7 @@ module.exports = function (grunt) {
                     // Options can be whatever htmlcompressor accepts.
                     // https://code.google.com/p/htmlcompressor/
                     type: 'html',
-                    removeSurroundingSpaces: 'all',
+                    removeSurroundingSpaces: 'max',
                     compressCss: true,
                     compressJs: true,
                     jsCompressor: 'closure',
