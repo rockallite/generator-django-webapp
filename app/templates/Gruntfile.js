@@ -161,27 +161,22 @@ module.exports = function (grunt) {
             },
             livereload: {
                 options: {
-                    middleware: function(connect) {
-                        return [
-                            connect.static('.tmp'),
-                            connect().use('/bower_components', connect.static('<%%= config.assets %>/bower_components')),
-                            connect.static('<%%= config.assets %>')
-                        ];
-                    }
+                    base: [
+                        '.tmp',
+                        '<%= config.assets %>',
+                        '<%= config.templates %>'
+                    ]
                 }
             },
             test: {
                 options: {
                     open: false,
                     port: 9001,
-                    middleware: function(connect) {
-                        return [
-                            connect.static('.tmp'),
-                            connect.static('test'),
-                            connect().use('/bower_components', connect.static('<%%= config.assets %>/bower_components')),
-                            connect.static('<%%= config.assets %>')
-                        ];
-                    }
+                    base: [
+                        '.tmp',
+                        '<%= config.assets %>',
+                        '<%= config.templates %>'
+                    ]
                 }
             },
             dist: {
@@ -453,7 +448,7 @@ module.exports = function (grunt) {
                     // Options can be whatever htmlcompressor accepts.
                     // https://code.google.com/p/htmlcompressor/
                     type: 'html',
-                    removeSurroundingSpaces: 'all',
+                    removeSurroundingSpaces: 'max',
                     compressCss: true,
                     compressJs: true,
                     jsCompressor: 'closure',
@@ -622,20 +617,6 @@ module.exports = function (grunt) {
         }
     });
 
-
-    grunt.registerTask('serve', function (target) {
-        if (target === 'dist') {
-            return grunt.task.run(['build', 'connect:dist:keepalive']);
-        }
-
-        grunt.task.run([
-            'clean:server',
-            'concurrent:server',
-            'autoprefixer',
-            'connect:livereload',
-            'watch'
-        ]);
-    });
 
     grunt.registerTask('serve', function (target) {
         if (target === 'dist') {
