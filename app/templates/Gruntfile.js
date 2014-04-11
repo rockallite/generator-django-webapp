@@ -174,6 +174,7 @@ module.exports = function (grunt) {
                     port: 9001,
                     base: [
                         '.tmp',
+                        'test',
                         '<%= config.assets %>',
                         '<%= config.templates %>'
                     ]
