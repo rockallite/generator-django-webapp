@@ -40,6 +40,9 @@ module.exports = function (grunt) {
             dist: 'dist',
             distAssets: 'dist/static',
             distTemplates: 'dist/templates'
+            // You can change the following file to your custom build of Modernizr during development
+            // (without assets directory prefix). See: http://modernizr.com/download/
+            modernizrDevFile: 'bower_components/modernizr/modernizr.js'
         },
 
         <% if (includeRequireJS) { %>// Optimize RequireJS projects using r.js
@@ -585,14 +588,14 @@ module.exports = function (grunt) {
         // Generates a custom Modernizr build that includes only the tests you
         // reference in your app
         modernizr: {
-            devFile: '<%%= config.collectedAssets %>/bower_components/modernizr/modernizr.js',
-            outputFile: '<%%= config.distAssets %>/scripts/vendor/modernizr.js',
+            devFile: '<%%= config.collectedAssets %>/<%%= config.modernizrDevFile %>',
+            outputFile: '<%%= config.collectedAssets %>/<%%= config.modernizrDevFile %>',
             files: [
-                '<%%= config.distAssets %>/{,*/}{scripts,js}/**/*.js',
-                '<%%= config.distAssets %>/{,*/}{styles,css}/**/*.css',
-                '!<%%= config.distAssets %>/{,*/}{scripts,js}/vendor/*'
+                '<%%= config.collectedAssets %>/{,*/}{scripts,js}/**/*.js',
+                '<%%= config.collectedAssets %>/{,*/}{styles,css}/**/*.css',
+                '!<%%= config.collectedAssets %>/{,*/}{scripts,js}/vendor/*'
             ],
-            uglify: true
+            uglify: false
         },<% } %>
 
         // Run some tasks in parallel to speed up build process
@@ -672,7 +675,8 @@ to simulate the collection process, then try again.'));
 
     grunt.registerTask('build', [
         'checkcollected',
-        'clean:dist',
+        'clean:dist',<% if (includeModernizr) { %>
+        'modernizr',<% } %>
         'useminPrepare',<% if (includeRequireJS) { %>
         'requirejs',
         'clean:requirejs',<% } %>
@@ -681,8 +685,7 @@ to simulate the collection process, then try again.'));
         'concat',
         'cssmin',
         'uglify',
-        'copy:dist',<% if (includeModernizr) { %>
-        'modernizr',<% } %>
+        'copy:dist',
         'filerev',<% if (includeRequireJS) { %>
         'requirejspaths',
         'processhtml',<% } %>
