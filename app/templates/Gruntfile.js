@@ -528,7 +528,7 @@ module.exports = function (grunt) {
                     src: [
                         '*.{ico,png,txt}',
                         '.htaccess',
-                        '{,*/}{images,img}/**/*.webp',
+                        '{,*/}{images,img}/**/*.{webp,html}',
                         '{,*/}fonts/**/*.*'
                     ],
                     dest: '<%%= config.distAssets %>'
