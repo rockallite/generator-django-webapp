@@ -325,7 +325,7 @@ module.exports = function (grunt) {
                     expand: true,
                     cwd: '<%%= config.collectedAssets %>/less',
                     src: ['**/*.less'],
-                    dest: '.tmp/styles',
+                    dest: '.tmp/concat/styles',
                     ext: '.css'
                 }]
             },
