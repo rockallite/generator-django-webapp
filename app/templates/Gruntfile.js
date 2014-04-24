@@ -558,6 +558,14 @@ module.exports = function (grunt) {
                 src: '{,*/}{styles,css}/**/*.css',
                 dest: '.tmp'
             },
+            // Copy all LESS compiled CSS files for `concat` task of those inside `usemin` directives
+            lessstyles: {
+                expand: true,
+                dot: true,
+                cwd: '.tmp/concat/styles',
+                src: '**/*.css',
+                dest: '<%%= config.collectedAssets %>/styles'
+            },
             styles: {
                 expand: true,
                 dot: true,
