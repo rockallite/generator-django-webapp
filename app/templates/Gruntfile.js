@@ -133,7 +133,10 @@ module.exports = function (grunt) {
                 tasks: ['compass:server', 'autoprefixer']
             },<% } %><% if (includeLess) { %>
             less: {
-                files: ['<%%= config.assets %>/less/**/*.less'],
+                files: [
+                    '<%%= config.assets %>/less/**/*.less',
+                    '<%%= config.assets %>/lib-less/**/*.less'
+                ],
                 tasks: ['less:server']
             },<% } %>
             styles: {

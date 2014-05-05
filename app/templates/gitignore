@@ -177,6 +177,6 @@ bower_components/
 /etc/static_collected/
 /etc/templates_collected/
 /etc/uploads/
-/<%= projectName %>/my/
+/my/
 /<%= projectName %>/spec/*/secret.py
 /<%= projectName %>/spec/local/

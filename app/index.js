@@ -145,15 +145,15 @@ AppGenerator.prototype.djangoProjectDir = function djangoProjectDir() {
   // Save current working directory
   var cwd = process.cwd();
 
+  // <projectName>/spec
+  var specDir = path.join(cwd, this.projectName, 'spec');
+
   // my
-  var myDir = path.join(cwd, this.projectName, 'my');
+  var myDir = path.join(cwd, 'my');
   try {
     fs.mkdirSync(myDir);
   }
   catch (err) {}
-
-  // spec
-  var specDir = path.join(cwd, this.projectName, 'spec');
 
   // my/requirements/
   var sourceRequirementsLocal = path.join(myDir, 'requirements/local.txt');
@@ -163,7 +163,7 @@ AppGenerator.prototype.djangoProjectDir = function djangoProjectDir() {
   catch (err) {}
   fs.writeFile(
     sourceRequirementsLocal,
-    '# This file contains Python dependencies for your local development.\n# You can also put dependencies of your choice here.\n-r common.txt\n-r dev.txt',
+    '# This file contains Python dependencies for your local development.\n# You can also put dependencies of your choice here.\n-r common.txt\n-r dev.txt\n',
     function (err) {
       if (err) throw err;
 
@@ -190,7 +190,18 @@ AppGenerator.prototype.djangoProjectDir = function djangoProjectDir() {
   catch (err) {}
   fs.writeFile(
     sourceStageSecret,
-    '# -*- coding: utf-8 -*-\n# Put secrets here, e.g. SECRET_KEYS, database password, etc.',
+    '\
+# -*- coding: utf-8 -*-\n\
+# Put secrets here, e.g. SECRET_KEY, database settings, etc.\n\n\
+SECRET_KEY = \'your-staging-secret-key\'\n\n\
+DEFAULT_DATABASE_SETTING = {\n\
+    \'ENGINE\': \'django.db.backends.mysql\',\n\
+    \'NAME\': \'name\',\n\
+    \'USER\': \'user\',\n\
+    \'PASSWORD\': \'password\',\n\
+    \'HOST\': \'host\',\n\
+    \'PORT\': \'port\',\n\
+}\n',
     function (err) {
       if (err) throw err;
 
@@ -217,7 +228,20 @@ AppGenerator.prototype.djangoProjectDir = function djangoProjectDir() {
   catch (err) {}
   fs.writeFile(
     sourceProdSecret,
-    '# -*- coding: utf-8 -*-\n# Put secrets here, e.g. SECRET_KEYS, database password, etc.',
+    '\
+# -*- coding: utf-8 -*-\n\
+# Put secrets here, e.g. SECRET_KEY, database settings, etc.\n\n\
+SECRET_KEY = \'your-production-secret-key\'\n\n\
+DEFAULT_DATABASE_SETTING = {\n\
+    \'ENGINE\': \'django.db.backends.mysql\',\n\
+    \'NAME\': \'name\',\n\
+    \'USER\': \'user\',\n\
+    \'PASSWORD\': \'password\',\n\
+    \'HOST\': \'host\',\n\
+    \'PORT\': \'port\',\n\
+}\n\n\
+# Fill in your actual hosts!\n\
+ALLOWED_HOSTS = []\n',
     function (err) {
       if (err) throw err;
 
@@ -246,7 +270,7 @@ AppGenerator.prototype.djangoProjectDir = function djangoProjectDir() {
     sourceLocalSettings,
     this.engine('\
 # -*- coding: utf-8 -*-\nfrom <%= projectName %>.settings import *\n\n\
-WSGI_APPLICATION = \'<%= projectName %>.spec.local.wsgi.application\'', this),
+WSGI_APPLICATION = \'<%= projectName %>.spec.local.wsgi.application\'\n', this),
     function (err) {
       if (err) throw err;
 
@@ -275,8 +299,8 @@ WSGI_APPLICATION = \'<%= projectName %>.spec.local.wsgi.application\'', this),
     this.engine('\
 # -*- coding: utf-8 -*-\n\
 import os\n\
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "<%= projectName %>.spec.local.settings")\n\n\
-from <%= projectName %>.wsgi import application', this),
+os.environ.setdefault(\'DJANGO_SETTINGS_MODULE\', \'<%= projectName %>.spec.local.settings\')\n\n\
+from <%= projectName %>.wsgi import application\n', this),
     function (err) {
       if (err) throw err;
 
@@ -300,27 +324,35 @@ from <%= projectName %>.wsgi import application', this),
   this.write(specDir + '/stage/__init__.py', '');
 
   this.write(specDir + '/stage/settings.py', this.engine('\
-# -*- coding: utf-8 -*-\nfrom <%= projectName %>.settings import *\n\n\
-WSGI_APPLICATION = \'<%= projectName %>.spec.stage.wsgi.application\'', this));
+# -*- coding: utf-8 -*-\n\
+from <%= projectName %>.settings import *\n\
+from <%= projectName %>.spec.stage.secret import SECRET_KEY, DEFAULT_DATABASE_SETTING\n\n\
+DATABASES[\'default\'] = DEFAULT_DATABASE_SETTING\n\n\
+WSGI_APPLICATION = \'<%= projectName %>.spec.stage.wsgi.application\'\n', this));
 
   this.write(specDir + '/stage/wsgi.py', this.engine('\
 # -*- coding: utf-8 -*-\n\
 import os\n\
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "<%= projectName %>.spec.stage.settings")\n\n\
-from <%= projectName %>.wsgi import application', this));
+os.environ.setdefault(\'DJANGO_SETTINGS_MODULE\', \'<%= projectName %>.spec.stage.settings\')\n\n\
+from <%= projectName %>.wsgi import application\n', this));
 
   // spec/prod
   this.write(specDir + '/prod/__init__.py', '');
 
   this.write(specDir + '/prod/settings.py', this.engine('\
-# -*- coding: utf-8 -*-\nfrom <%= projectName %>.settings import *\n\n\
-WSGI_APPLICATION = \'<%= projectName %>.spec.prod.wsgi.application\'', this));
+# -*- coding: utf-8 -*-\n\
+from <%= projectName %>.settings import *\n\
+from <%= projectName %>.spec.prod.secret import SECRET_KEY, ALLOWED_HOSTS, DEFAULT_DATABASE_SETTING\n\n\
+DATABASES[\'default\'] = DEFAULT_DATABASE_SETTING\n\n\
+DEBUG = False\n\n\
+TEMPLATE_DEBUG = False\n\n\
+WSGI_APPLICATION = \'<%= projectName %>.spec.prod.wsgi.application\'\n', this));
 
   this.write(specDir + '/prod/wsgi.py', this.engine('\
 # -*- coding: utf-8 -*-\n\
 import os\n\
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "<%= projectName %>.spec.prod.settings")\n\n\
-from <%= projectName %>.wsgi import application', this));
+os.environ.setdefault(\'DJANGO_SETTINGS_MODULE\', \'<%= projectName %>.spec.prod.settings\')\n\n\
+from <%= projectName %>.wsgi import application\n', this));
 
   // spec/local
   this.write(specDir + '/local/__init__.py', '');
@@ -361,10 +393,10 @@ from django.utils.translation import ugettext_lazy as _\n\n'
 };
 
 AppGenerator.prototype.djangoDirRequirements = function djangoDirRequirements() {
-  this.write('requirements/common.txt', '# This file contains common Python dependencies for all circumstances.');
-  this.write('requirements/stage.txt', '# This file contains Python dependencies for the staging server.\n-r common.txt');
-  this.write('requirements/prod.txt', '# This file contains Python dependencies for the production server.\n-r common.txt');
-  this.write('requirements/dev.txt', '# This file contains Python dependencies for development only.');
+  this.write('requirements/common.txt', '# This file contains common Python dependencies for all circumstances.\n');
+  this.write('requirements/stage.txt', '# This file contains Python dependencies for the staging server.\n-r common.txt\n');
+  this.write('requirements/prod.txt', '# This file contains Python dependencies for the production server.\n-r common.txt\n');
+  this.write('requirements/dev.txt', '# This file contains Python dependencies for development only.\n');
 };
 
 AppGenerator.prototype.djangoDirFabric = function djangoDirFabric() {
@@ -392,6 +424,7 @@ AppGenerator.prototype.djangoDirEtc = function djangoDirEtc() {
   this.mkdir('etc/static/styles');
   if (this.includeLess) {
     this.mkdir('etc/static/less');
+    this.mkdir('etc/static/lib-less');
   }
   this.mkdir('etc/static/scripts');
   this.mkdir('etc/static/images');
