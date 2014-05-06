@@ -368,11 +368,11 @@ from <%= projectName %>.wsgi import application\n', this));
     commonDir + '/trans.py',
     '\
 # -*- coding: utf-8 -*-\n\
-# Put the string you want to manually translate in this file, like this:\n\
+# Here puts strings which you want to manually translate. For example:\n\
 #\n\
-# _(\'Something that is not translated in offcial Django distro.\')\n\
+# _(\'Strings that are not translated in offcial Django source code\')\n\
 #\n\
-# When you run `django-admin.py makemessage -l <language-code>` command, it will create a message file:\n\
+# When you run `../manage.py makemessages -l <language_code>` command in `<%= projectName %>` sub-directory, it will create message files:\n\
 #\n\
 # locale/<language-code>/LC_MESSAGES/django.po\n\
 #\n\
@@ -444,27 +444,43 @@ AppGenerator.prototype.djangoSettings = function djangoSettings() {
   var settings_file = this.projectName + '/settings.py';
   var settings_body = this.readFileAsString(settings_file);
   if (settings_body.indexOf('import os') < 0) {
-    settings_body = settings_body + '\nimport os\n';
+    settings_body += '\nimport os\n';
   }
 
   if (settings_body.indexOf('BASE_DIR') < 0) {
-    settings_body = settings_body + '\nBASE_DIR = os.path.dirname(os.path.dirname(__file__))\n';
+    settings_body += '\nBASE_DIR = os.path.dirname(os.path.dirname(__file__))\n';
   }
 
   if (settings_body.indexOf('STATIC_ROOT') < 0) {
-    settings_body = settings_body + '\n# https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-STATIC_ROOT\nSTATIC_ROOT = os.path.join(BASE_DIR, \'etc/static_collected\')\n';
+    settings_body += '\n\
+# https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-STATIC_ROOT\n\
+STATIC_ROOT = os.path.join(BASE_DIR, \'etc/static_collected\')\n';
   }
 
   if (settings_body.indexOf('STATICFILES_DIRS') < 0) {
-    settings_body = settings_body + '\nSTATICFILES_DIRS = (\n    os.path.join(BASE_DIR, \'etc/static\'),\n)\n';
+    settings_body += '\n\
+STATICFILES_DIRS = (\n\
+    os.path.join(BASE_DIR, \'etc/static\'),\n\
+)\n';
   }
 
   if (settings_body.indexOf('TEMPLATE_DIRS') < 0) {
-    settings_body = settings_body + '\nTEMPLATE_DIRS = (\n    os.path.join(BASE_DIR, \'etc/templates\'),\n)\n';
+    settings_body += '\n\
+TEMPLATE_DIRS = (\n\
+    os.path.join(BASE_DIR, \'etc/templates\'),\n\
+)\n';
   }
 
   if (settings_body.indexOf('MEDIA_ROOT') < 0) {
-    settings_body = settings_body + '\nMEDIA_ROOT = os.path.join(BASE_DIR, \'etc/uploads\')\n';
+    settings_body += '\nMEDIA_ROOT = os.path.join(BASE_DIR, \'etc/uploads\')\n';
+  }
+
+  if (settings_body.indexOf('LOCALE_PATHS') < 0) {
+    settings_body += '\n\
+# https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-LOCALE_PATHS\n\
+LOCALE_PATHS = (\n\
+    os.path.join(BASE_DIR, \'emc/common/locale\'),\n\
+)\n';
   }
 
   fs.writeFile(settings_file, settings_body, function (err) {
