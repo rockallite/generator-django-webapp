@@ -372,9 +372,9 @@ from <%= projectName %>.wsgi import application\n', this));
 #\n\
 # _(\'Strings that are not translated in offcial Django source code\')\n\
 #\n\
-# When you run `../manage.py makemessages -l <language_code>` command in `<%= projectName %>` sub-directory, it will create message files:\n\
+# When you run `../manage.py makemessages -l <locale_NAME>` command in `<%= projectName %>` sub-directory, it will create message files:\n\
 #\n\
-# locale/<language-code>/LC_MESSAGES/django.po\n\
+# locale/<locale_NAME>/LC_MESSAGES/django.po\n\
 #\n\
 # For more information about translation, see:\n\
 # https://docs.djangoproject.com/en/dev/topics/i18n/translation/\n\
