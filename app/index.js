@@ -443,6 +443,8 @@ AppGenerator.prototype.djangoSettings = function djangoSettings() {
   // Modify settings.py
   var settings_file = this.projectName + '/settings.py';
   var settings_body = this.readFileAsString(settings_file);
+  settings_body += '\n\n# Custom paths\n'
+
   if (settings_body.indexOf('import os') < 0) {
     settings_body += '\nimport os\n';
   }
