@@ -8,7 +8,9 @@ About directory structure:
   |   |= conf  <-- Server related configuration files
   |   \= docs  <-- Docs about the project
   |
-  |= apps  <-- Apps created by you (Run `fab startapp:<your_app_name>` to create an app)
+  |= apps  <-- Django apps created by you (Run `fab startapp:<your_app_name>` to create an app)
+  |
+  |= utils  <-- Utilities modules created by you
   |
   |= my  <-- Custom project information. See below for details
   |
@@ -20,8 +22,7 @@ About directory structure:
   |
   \= <%= projectName %>
       |= spec    <-- Environment-specific Django settings and WSGI applications
-      |= common  <-- A special app which injects project-wise functionalities. See below for details
-      \= utils   <-- Utilities modules written by you
+      \= common  <-- A special app which injects project-wise functionalities. See below for details
 
 
 

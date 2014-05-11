@@ -145,9 +145,13 @@ AppGenerator.prototype.djangoProjectDir = function djangoProjectDir() {
   // Save current working directory
   var cwd = process.cwd();
 
-  // apps
+  // apps (an ordinary directory, not a module)
   var appsDir = path.join(cwd, 'apps');
   this.mkdir(appsDir);
+
+  // utils
+  var utilsDir = path.join(cwd, 'utils');
+  this.write(utilsDir + '/__init__.py', '');
 
   // <projectName>/spec
   var specDir = path.join(cwd, this.projectName, 'spec');
@@ -386,10 +390,6 @@ from django.utils.translation import ugettext_lazy as _\n\n'
   this.write(commonDir + '/test/__init__.py', '')
   this.mkdir(commonDir + '/templates');
   this.mkdir(commonDir + '/static');
-
-  // utils
-  var utilsDir = this.projectName + '/utils';
-  this.write(utilsDir + '/__init__.py', '');
 };
 
 AppGenerator.prototype.djangoDirRequirements = function djangoDirRequirements() {
