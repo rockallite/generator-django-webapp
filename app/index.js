@@ -145,6 +145,10 @@ AppGenerator.prototype.djangoProjectDir = function djangoProjectDir() {
   // Save current working directory
   var cwd = process.cwd();
 
+  // apps
+  var appsDir = path.join(cwd, 'apps');
+  this.mkdir(appsDir);
+
   // <projectName>/spec
   var specDir = path.join(cwd, this.projectName, 'spec');
 
@@ -357,10 +361,6 @@ from <%= projectName %>.wsgi import application\n', this));
   // spec/local
   this.write(specDir + '/local/__init__.py', '');
 
-  // apps
-  var appsDir = this.projectName + '/apps';
-  this.write(appsDir + '/__init__.py', '');
-
   // common
   var commonDir = this.projectName + '/common';
   this.write(commonDir + '/__init__.py', '');
@@ -400,7 +400,8 @@ AppGenerator.prototype.djangoDirRequirements = function djangoDirRequirements() 
 };
 
 AppGenerator.prototype.djangoDirFabric = function djangoDirFabric() {
-  this.write('fabfile/__init__.py', '');
+  this.copy('fabfile_init.py', 'fabfile/__init__.py');
+  this.copy('fabfile_utils.py', 'fabfile/utils.py');
   this.write('fabfile/build.py', '');
   this.write('fabfile/deploy/__init__.py', '');
   this.write('fabfile/deploy/stage.py', '');
@@ -485,7 +486,37 @@ LOCALE_PATHS = (\n\
 )\n';
   }
 
+  settings_body += '\n\
+# Application root path\n\
+APPS_DIR = os.path.join(BASE_DIR, \'apps\')\n\n\n\
+# Fix import paths\n\
+def _fix_module_path():\n\
+    import sys\n\
+    for d in (BASE_DIR, APPS_DIR):\n\
+        if d not in sys.path:\n\
+            sys.path.insert(0, d)\n\n\
+_fix_module_path()\n';
+
   fs.writeFile(settings_file, settings_body, function (err) {
+    if (err) throw err;
+  });
+};
+
+AppGenerator.prototype.djangoWsgi = function djangoWsgi() {
+  // Modify wsgi.py
+  var wsgi_file = this.projectName + '/wsgi.py';
+  var wsgi_body = this.readFileAsString(wsgi_file);
+  wsgi_body = wsgi_body.replace('import os\n', '\
+import os\n\
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))\n\
+APPS_DIR = os.path.join(BASE_DIR, \'apps\')\n\n\n\
+def _fix_module_path():\n\
+    import sys\n\
+    for d in (BASE_DIR, APPS_DIR):\n\
+        if d not in sys.path:\n\
+            sys.path.insert(0, d)\n\n\
+_fix_module_path()\n\n');
+  fs.writeFile(wsgi_file, wsgi_body, function (err) {
     if (err) throw err;
   });
 };
