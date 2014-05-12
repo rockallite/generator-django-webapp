@@ -39,7 +39,7 @@ module.exports = function (grunt) {
             collectedTemplates: 'templates_collected',
             dist: 'dist',
             distAssets: 'dist/static',
-            distTemplates: 'dist/templates'
+            distTemplates: 'dist/templates',
             // You can change the following file to your custom build of Modernizr during development
             // (without assets directory prefix). See: http://modernizr.com/download/
             modernizrDevFile: 'bower_components/modernizr/modernizr.js'
