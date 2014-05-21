@@ -8,7 +8,8 @@ About directory structure:
   |   |= conf  <-- Server related configuration files
   |   \= docs  <-- Docs about the project
   |
-  |= apps  <-- Django apps created by you (Run `fab startapp:<your_app_name>` to create an app)
+  |= apps        <-- Django apps created by you (Run `fab startapp:<your_app_name>` to create an app)
+  |   \= common  <-- A special app which injects project-wise functionalities. See below for details
   |
   |= utils  <-- Utilities modules created by you
   |
@@ -21,8 +22,7 @@ About directory structure:
   |   \= uploads    <-- User-uploaded content (`MEDIA_ROOT`). Keep it out of Git
   |
   \= <%= projectName %>
-      |= spec    <-- Environment-specific Django settings and WSGI applications
-      \= common  <-- A special app which injects project-wise functionalities. See below for details
+      \= spec    <-- Environment-specific Django settings and WSGI applications
 
 
 
@@ -35,7 +35,7 @@ Details of some directories:
   These files are for soft-linking in other places. Also, keep the symbolic links out of Git.
 
 
-<%= projectName %>/<%= projectName %>/common/
+<%= projectName %>/apps/common/
 
   This directory holds a special Django app which injects project-wise functionalities written by you.
 
@@ -51,7 +51,7 @@ Details of some directories:
   Put this app in the first element of INSTALLED_APPS so that it takes priority for processing, like this:
 
 	INSTALLED_APPS = (
-	    '<%= projectName %>.common',  # <-- Put it here to override `admin` app's template and static files
+	    'common',  # <-- Put it here to override `admin` app's template and static files
 	    'django.contrib.admin',
 	    'django.contrib.auth',
 	    ...

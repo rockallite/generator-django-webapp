@@ -149,6 +149,32 @@ AppGenerator.prototype.djangoProjectDir = function djangoProjectDir() {
   var appsDir = path.join(cwd, 'apps');
   this.mkdir(appsDir);
 
+  // apps/common
+  var commonDir = appsDir + '/common';
+  this.write(commonDir + '/__init__.py', '');
+  this.write(
+    commonDir + '/trans.py',
+    '\
+# -*- coding: utf-8 -*-\n\
+# Here puts strings which you want to manually translate. For example:\n\
+#\n\
+# _(\'Strings that are not translated in offcial Django source code\')\n\
+#\n\
+# When you run `../manage.py makemessages -l <locale_NAME>` command in `apps` sub-directory, it will create message files for each app:\n\
+#\n\
+# locale/<locale_NAME>/LC_MESSAGES/django.po\n\
+#\n\
+# For more information about translation, see:\n\
+# https://docs.djangoproject.com/en/dev/topics/i18n/translation/\n\
+from django.utils.translation import ugettext_lazy as _\n\n'
+  );
+  this.write(commonDir + '/management/__init__.py', '');
+  this.write(commonDir + '/management/commands/__init__.py', '');
+  this.write(commonDir + '/templatetags/__init__.py', '');
+  this.write(commonDir + '/test/__init__.py', '')
+  this.mkdir(commonDir + '/templates');
+  this.mkdir(commonDir + '/static');
+
   // utils
   var utilsDir = path.join(cwd, 'utils');
   this.write(utilsDir + '/__init__.py', '');
@@ -364,32 +390,6 @@ from <%= projectName %>.wsgi import application\n', this));
 
   // spec/local
   this.write(specDir + '/local/__init__.py', '');
-
-  // common
-  var commonDir = this.projectName + '/common';
-  this.write(commonDir + '/__init__.py', '');
-  this.write(
-    commonDir + '/trans.py',
-    '\
-# -*- coding: utf-8 -*-\n\
-# Here puts strings which you want to manually translate. For example:\n\
-#\n\
-# _(\'Strings that are not translated in offcial Django source code\')\n\
-#\n\
-# When you run `../manage.py makemessages -l <locale_NAME>` command in `<%= projectName %>` sub-directory, it will create message files:\n\
-#\n\
-# locale/<locale_NAME>/LC_MESSAGES/django.po\n\
-#\n\
-# For more information about translation, see:\n\
-# https://docs.djangoproject.com/en/dev/topics/i18n/translation/\n\
-from django.utils.translation import ugettext_lazy as _\n\n'
-  );
-  this.write(commonDir + '/management/__init__.py', '');
-  this.write(commonDir + '/management/commands/__init__.py', '');
-  this.write(commonDir + '/templatetags/__init__.py', '');
-  this.write(commonDir + '/test/__init__.py', '')
-  this.mkdir(commonDir + '/templates');
-  this.mkdir(commonDir + '/static');
 };
 
 AppGenerator.prototype.djangoDirRequirements = function djangoDirRequirements() {
@@ -478,14 +478,6 @@ TEMPLATE_DIRS = (\n\
     settings_body += '\nMEDIA_ROOT = os.path.join(BASE_DIR, \'etc/uploads\')\n';
   }
 
-  if (settings_body.indexOf('LOCALE_PATHS') < 0) {
-    settings_body += '\n\
-# https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-LOCALE_PATHS\n\
-LOCALE_PATHS = (\n\
-    os.path.join(BASE_DIR, \'emc/common/locale\'),\n\
-)\n';
-  }
-
   settings_body += '\n\
 # Application root path\n\
 APPS_DIR = os.path.join(BASE_DIR, \'apps\')\n\n\n\
@@ -496,6 +488,14 @@ def _fix_module_path():\n\
         if d not in sys.path:\n\
             sys.path.insert(0, d)\n\n\
 _fix_module_path()\n';
+
+  if (settings_body.indexOf('LOCALE_PATHS') < 0) {
+    settings_body += '\n\
+# https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-LOCALE_PATHS\n\
+LOCALE_PATHS = (\n\
+    os.path.join(APPS_DIR, \'common\', \'locale\'),\n\
+)\n';
+  }
 
   fs.writeFile(settings_file, settings_body, function (err) {
     if (err) throw err;
