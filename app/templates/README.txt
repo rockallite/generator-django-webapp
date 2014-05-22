@@ -56,3 +56,16 @@ Details of some directories:
 	    'django.contrib.auth',
 	    ...
 	)
+
+
+
+Two Fabric commands is offerred by default:
+
+fab startapp:<app_name>
+
+  Start a Django app in `apps` directory.
+
+
+fab test
+
+  Run unit tests against the Django project. It actually runs `./manage.py test apps .` (Notice the trailing dot).

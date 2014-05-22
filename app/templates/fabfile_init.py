@@ -22,3 +22,11 @@ def startapp(name, dsm=DEFAULT_DJANGO_SETTINGS_MODULE, dest=APPS_PATH):
         os.makedirs(full_dest)
     with lcd(ROOT_PATH):
         local('./manage.py startapp %s %s --settings=%s' % (name, full_dest, dsm))
+
+
+@task
+def test(verbosity=1, dsm=DEFAULT_DJANGO_SETTINGS_MODULE):
+    """[Local] Run unit tests against the project"""
+    ensure_local()
+    with lcd(ROOT_PATH):
+        local('./manage.py test apps . -v%s --settings=%s' % (verbosity, dsm))
