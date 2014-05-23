@@ -30,7 +30,6 @@
 - Run `grunt` for building static assets
 - If everything is OK, the built assets are in `etc/dist` directory
 
-
 #### Third-Party Dependencies
 
 *(HTML/CSS/JS/Images/etc)*
@@ -55,6 +54,38 @@ The components are installed in the root of the project at `/bower_components`. 
 
 Note: `grunt server` was previously used for previewing in earlier versions of the project and is being deprecated in favor of `grunt serve`.
 
+
+#### Django Templates Note
+Note: Because `htmlcompressor` is used to optimize HTML and its inline JavaScript and CSS, **all inline JavaScript and CSS must be valid**. This means **no Django template tags allowed inside JavaScript or CSS**, with one exception: string literals.
+
+For example, the follow JavaScript is valid:
+```html
+<script>
+userId = '{{ user.id }}';
+</script>
+```
+
+However, the follow one is not, because there are syntax errors of JavaScript, which causes `htmlcompressor` task fail:
+```html
+<script>
+{% if user.is_authenticated %}
+   userId = '{{ user.id }}';
+{% else %}
+   userId = null;
+{% endif %}
+</script>
+```
+
+You must rewrite it as:
+```html
+{% if user.is_authenticated %}
+<script>userId = '{{ user.id }}'</script>
+{% else %}
+<script>userId = null;</script>
+{% endif %}
+```
+
+Django template tags inside HTML are valid, though.
 
 ## Options
 
