@@ -56,7 +56,7 @@ Note: `grunt server` was previously used for previewing in earlier versions of t
 
 
 #### Django Templates Note
-Note: Because `htmlcompressor` is used to optimize HTML and its inline JavaScript and CSS, **all inline JavaScript and CSS must be valid**. This means **no Django template tags allowed inside JavaScript or CSS**, with two exceptions: string literals, or skip-blocks.
+Note: Because `htmlcompressor` is used to optimize HTML and its inline JavaScript and CSS, **all inline JavaScript and CSS must be valid**. This means **no Django template tags allowed inside JavaScript or CSS**, with one exceptions: string literals.
 
 For example, the follow JavaScript is valid:
 ```html
@@ -85,16 +85,20 @@ You must rewrite it as:
 {% endif %}
 ```
 
-or use the "skip-block" feature of `htmlcompressor`, which wraps the content inside `<!-- {{{ -->...<!-- }}} -->`:
+or use the "skip-block" feature of `htmlcompressor` to completely ignore  compression of a specific block of inline script:
 ```html
+<!-- {{{ -->
 <script>
-<!-- {{{ -->{% if user.is_authenticated %}<!-- }}} -->
+{% if user.is_authenticated %}
   userId = '{{ user.id }}';
-<!-- {{{ -->{% else %}<!-- }}} -->
+{% else %}
   userId = null;
-<!-- {{{ -->{% endif %}<!-- }}} -->
+{% endif %}
 </script>
+<!-- }}} -->
 ```
+
+Anything between `<!-- {{{ -->` and `<!-- }}} -->` will be preserved as-is and not compressed.
 
 Django template tags inside HTML are valid, though.
 
