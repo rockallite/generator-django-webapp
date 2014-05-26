@@ -459,6 +459,7 @@ module.exports = function (grunt) {
                     compressCss: true,
                     compressJs: true,
                     jsCompressor: 'closure',
+                    preserve: 'preserve.txt',  // Django template compatible preserve rules
 
                     // *** 10x PERFORMANCE BOOST HERE ***
 

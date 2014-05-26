@@ -559,6 +559,10 @@ AppGenerator.prototype.mainStylesheet = function mainStylesheet() {
   this.copy(css, 'etc/static/styles/' + css);
 };
 
+AppGenerator.prototype.htmlcompressorPreserve = function htmlcompressorPreserve() {
+  this.copy('preserve.txt', 'etc/preserve.txt');
+};
+
 AppGenerator.prototype.writeIndex = function writeIndex() {
 
   this.indexFile = this.readFileAsString(path.join(this.sourceRoot(), 'index.html'));

@@ -85,9 +85,9 @@ You must rewrite it as:
 {% endif %}
 ```
 
-or use the "skip-block" feature of `htmlcompressor` to completely ignore  compression of a specific block of inline script:
+or use the "skip-block" to completely ignore  compression of a specific block of inline script:
 ```html
-<!-- {{{ -->
+<!-- ((( -->
 <script>
 {% if user.is_authenticated %}
   userId = '{{ user.id }}';
@@ -95,10 +95,10 @@ or use the "skip-block" feature of `htmlcompressor` to completely ignore  compre
   userId = null;
 {% endif %}
 </script>
-<!-- }}} -->
+<!-- ))) -->
 ```
 
-Anything between `<!-- {{{ -->` and `<!-- }}} -->` will be preserved as-is and not compressed.
+Anything between `<!-- ((( -->` and `<!-- ))) -->` will be preserved as-is and not compressed.
 
 Django template tags inside HTML are valid, though.
 
