@@ -171,7 +171,7 @@ from django.utils.translation import ugettext_lazy as _\n\n'
   this.write(commonDir + '/management/__init__.py', '');
   this.write(commonDir + '/management/commands/__init__.py', '');
   this.write(commonDir + '/templatetags/__init__.py', '');
-  this.write(commonDir + '/test/__init__.py', '')
+  this.write(commonDir + '/tests/__init__.py', '')
   this.mkdir(commonDir + '/templates');
   this.mkdir(commonDir + '/static');
 
@@ -528,6 +528,12 @@ AppGenerator.prototype.git = function git() {
 
 AppGenerator.prototype.gruntfile = function gruntfile() {
   this.template('Gruntfile.js', 'etc/Gruntfile.js');
+};
+
+AppGenerator.prototype.requirejsConf = function requirejsConf() {
+  if (this.includeRequireJS) {
+    this.copy('requirejsdist.js', 'etc/requirejsdist.js');
+  }
 };
 
 AppGenerator.prototype.packageJSON = function packageJSON() {
