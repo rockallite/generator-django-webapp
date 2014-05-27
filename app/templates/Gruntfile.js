@@ -15,18 +15,9 @@ module.exports = function (grunt) {
     // Time how long tasks take. Can help when optimizing build times
     require('time-grunt')(grunt);
 
-    <% if (includeRequireJS) { %>// ReuireJS configuration sample for distribution
-    var requirejsDistModules = [
-        {
-            name: 'main',
-            exclude: ['infra']
-        }, {
-            name: 'main2',
-            exclude: ['infra']
-        }, {
-            name: 'infra'
-        }
-    ];
+    <% if (includeRequireJS) { %>// ReuireJS configuration sample for distribution.
+    // Edit ./requirejsdist.js for your needs.
+    var requirejsDist = require('./requirejsdist');
 
     <% } %>// Define the configuration for all the tasks
     grunt.initConfig({
@@ -59,7 +50,8 @@ module.exports = function (grunt) {
                     shim: {
                         bootstrap: ['jquery'],
                     },
-                    modules: requirejsDistModules,
+                    modules: requirejsDist.modules,
+                    stubModules: requirejsDist.stubModules,
                     optimize: 'uglify',
                     preserveLicenseComments: false,
                     useStrict: true,
@@ -77,7 +69,7 @@ module.exports = function (grunt) {
                 options: {
                     baseRoot: '<%%= config.distAssets %>/scripts',
                     baseUrl: '{{ STATIC_URL }}scripts',
-                    modules: requirejsDistModules.map(function(m) {return m.name;}),
+                    modules: requirejsDist.modules.map(function(m) {return m.name;}),
                     outputFile: '.tmp/requirejspaths.html'
                 }
             }
