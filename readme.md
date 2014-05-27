@@ -56,7 +56,7 @@ Note: `grunt server` was previously used for previewing in earlier versions of t
 
 
 #### Django Templates Note
-Note: Because `htmlcompressor` is used to optimize HTML and its inline JavaScript and CSS, **all inline JavaScript and CSS must be valid**. This means **no Django template tags allowed inside JavaScript or CSS**, with one exceptions: string literals.
+Note: Because `htmlcompressor` is used to optimize HTML and its inline JavaScript and CSS, **all inline JavaScript and CSS must be valid**. This means **no Django template tags allowed inside JavaScript or CSS**, with a few exceptions mentioned below.
 
 For example, the follow JavaScript is valid:
 ```html
@@ -85,7 +85,21 @@ You must rewrite it as:
 {% endif %}
 ```
 
-or use the "skip-block" to completely ignore  compression of a specific block of inline script:
+Or use C-style comments starting with `/*!` which are preserved:
+```html
+<script>
+/*! {% if user.is_authenticated %} */
+  userId = '{{ user.id }}';
+/*! {% else %} */
+  userId = null;
+/*! {% endif %} */
+</script>
+
+```
+
+Here you can't use normal comment, because all Django template tags inside will be removed during compression, which is definitely not what you want. Notice that after compression, a line break will be appended at the end of every block of C-style comment.
+
+Or you can use the "skip-block" feature of `django-webapp` to completely ignore the compression of a specific block of script:
 ```html
 <!-- ((( -->
 <script>
@@ -98,7 +112,7 @@ or use the "skip-block" to completely ignore  compression of a specific block of
 <!-- ))) -->
 ```
 
-Anything between `<!-- ((( -->` and `<!-- ))) -->` will be preserved as-is and not compressed.
+Anything between `<!-- ((( -->` and `<!-- ))) -->` will be preserved as-is and not compressed. This is not recommanded, and should only be used as a fail-back.
 
 Django template tags inside HTML are valid, though.
 
