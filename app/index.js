@@ -40,6 +40,17 @@ var fileRelative = function (from, to) {
   return path.join(path.relative(path.dirname(from), path.dirname(to)), path.basename(to));
 };
 
+var makeSymlink = function(source, link) {
+  try {
+    fs.symlinkSync(source, link);
+  } catch(e) {
+    if (/EPERM/.test(e.message)) {
+      console.error("Failed to create symlink. If you're running this on Windows, make sure you execute this as admin");
+    }
+    throw e;
+  }
+}
+
 var djangoFail = function () {
   // Fail for any other circumstances
   console.error(chalk.red('Error: Django project not found, or project name is wrong.'));
@@ -178,7 +189,7 @@ AppGenerator.prototype.djangoProjectDir = function djangoProjectDir() {
         }
         catch (e) {}
       }
-      fs.symlinkSync(fileRelative(target, sourceRequirementsLocal), target);
+      makeSymlink(fileRelative(target, sourceRequirementsLocal), target);
     }
   );
 
@@ -205,7 +216,7 @@ AppGenerator.prototype.djangoProjectDir = function djangoProjectDir() {
         }
         catch (e) {}
       }
-      fs.symlinkSync(fileRelative(target, sourceStageSecret), target);
+      makeSymlink(fileRelative(target, sourceStageSecret), target);
     }
   );
 
@@ -232,7 +243,7 @@ AppGenerator.prototype.djangoProjectDir = function djangoProjectDir() {
         }
         catch (e) {}
       }
-      fs.symlinkSync(fileRelative(target, sourceProdSecret), target);
+      makeSymlink(fileRelative(target, sourceProdSecret), target);
     }
   );
 
@@ -261,7 +272,7 @@ WSGI_APPLICATION = \'<%= projectName %>.spec.local.wsgi.application\'', this),
         }
         catch (e) {}
       }
-      fs.symlinkSync(fileRelative(target, sourceLocalSettings), target);
+      makeSymlink(fileRelative(target, sourceLocalSettings), target);
     }
   );
 
@@ -291,7 +302,7 @@ from <%= projectName %>.wsgi import application', this),
         }
         catch (e) {}
       }
-      fs.symlinkSync(fileRelative(target, sourceLocalWsgi), target);
+      makeSymlink(fileRelative(target, sourceLocalWsgi), target);
     }
   );
 
